@@ -1,17 +1,17 @@
 package com.control.moneyTransferApp.service;
 
 import com.control.moneyTransferApp.dto.UserDto;
+import com.control.moneyTransferApp.model.Account;
+import com.control.moneyTransferApp.model.Transaction;
 import com.control.moneyTransferApp.model.User;
-import com.control.moneyTransferApp.repository.AccountRepository;
-import com.control.moneyTransferApp.repository.CompanyRepository;
-import com.control.moneyTransferApp.repository.RoleRepository;
-import com.control.moneyTransferApp.repository.UserRepository;
+import com.control.moneyTransferApp.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Service
@@ -21,7 +21,7 @@ public class UserService {
     private final RoleRepository repository;
     private final AccountRepository accountRepository;
     private final CompanyRepository companyRepository;
-    private final TransactionService transactionService;
+    private final TransactionRepository transactionRepository;
     public static String generateUniqueNumber() {
         UUID uuid = UUID.randomUUID();
         long leastSigBits = uuid.getLeastSignificantBits();
@@ -53,16 +53,14 @@ public class UserService {
 
 
     public void makePayment(int sum, String name, String userCode) {
-        if(accountRepository.existsAccountByUserAndCompany(userRepository.findFirstByUniqueCode(userCode),companyRepository.findByCompanyName(name))) {
-            transactionService.createTransaction()
-            Long number = accountRepository.findByUserAndCompany(userRepository.findFirstByUniqueCode(userCode), companyRepository.findByCompanyName(name)).getAccountNumber();
-            accountRepository.findByUserAndCompany(userRepository.findFirstByUniqueCode(userCode), companyRepository.findByCompanyName(name)).setAccountNumber(number + sum);
-           Long balanc = userRepository.findFirstByUniqueCode(userCode).getBalance();
-            userRepository.findFirstByUniqueCode(userCode).setBalance(balanc - sum);
-        }
-        else {
 
-        }
+            transactionRepository.save(Transaction.builder().sum((long)sum).createdDate(LocalDate.now()).company(companyRepository.findByCompanyName(name)).sender(userRepository.findFirstByUniqueCode(userCode)).build());
+            Long number = accountRepository.findByUserAndCompany(userRepository.findFirstByUniqueCode(userCode), companyRepository.findByCompanyName(name)).getAccountNumber();
+            Account account = accountRepository.findByUserAndCompany(userRepository.findFirstByUniqueCode(userCode), companyRepository.findByCompanyName(name));
+         accountRepository.findByUserAndCompany(userRepository.findFirstByUniqueCode(userCode), companyRepository.findByCompanyName(name)).setAccountNumber(number + sum);
+        Long balanc = userRepository.findFirstByUniqueCode(userCode).getBalance();
+            userRepository.findFirstByUniqueCode(userCode).setBalance(balanc - sum);
+
 
     }
 }

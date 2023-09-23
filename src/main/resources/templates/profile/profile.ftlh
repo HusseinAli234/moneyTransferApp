@@ -60,12 +60,21 @@
                             </thead>
                             <tbody>
                             <#list users.transactionList as transaction>
+
                             <tr class="align-middle">
                                 <td>
-                                    ${transaction.sender.name}
+                                    <#if transaction.sender?? >
+                                        ${transaction.sender.name}
+                                        <#else >
+                                            ${transaction.company.companyName}
+                                    </#if>
                                 </td>
                                 <td>${transaction.createdDate.dayOfMonth}-${transaction.createdDate.month}-${transaction.createdDate.year}</td>
-                                <td>${transaction.recipient.name}</td>
+                                <td>    <#if transaction.recipient?? >
+                                        ${transaction.recipient.name}
+                                    <#else >
+                                        ${transaction.company.companyName}
+                                    </#if></td>
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <span><i class="fa fa-arrow-up" aria-hidden="true"></i></span>
