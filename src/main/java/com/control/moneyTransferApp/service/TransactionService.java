@@ -27,6 +27,7 @@ public class TransactionService {
 
     }
 
+
     public List<Transaction> getTransactionByCode(String code)
     {
        return transactionRepository.findByRecipientOrSender(userRepository.findFirstByUniqueCode(code),userRepository.findFirstByUniqueCode(code));

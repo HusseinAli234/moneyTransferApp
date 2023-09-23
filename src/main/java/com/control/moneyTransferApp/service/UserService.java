@@ -21,6 +21,7 @@ public class UserService {
     private final RoleRepository repository;
     private final AccountRepository accountRepository;
     private final CompanyRepository companyRepository;
+    private final TransactionService transactionService;
     public static String generateUniqueNumber() {
         UUID uuid = UUID.randomUUID();
         long leastSigBits = uuid.getLeastSignificantBits();
@@ -53,6 +54,7 @@ public class UserService {
 
     public void makePayment(int sum, String name, String userCode) {
         if(accountRepository.existsAccountByUserAndCompany(userRepository.findFirstByUniqueCode(userCode),companyRepository.findByCompanyName(name))) {
+            transactionService.createTransaction()
             Long number = accountRepository.findByUserAndCompany(userRepository.findFirstByUniqueCode(userCode), companyRepository.findByCompanyName(name)).getAccountNumber();
             accountRepository.findByUserAndCompany(userRepository.findFirstByUniqueCode(userCode), companyRepository.findByCompanyName(name)).setAccountNumber(number + sum);
            Long balanc = userRepository.findFirstByUniqueCode(userCode).getBalance();
