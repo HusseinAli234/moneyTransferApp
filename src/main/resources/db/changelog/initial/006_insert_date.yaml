@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: insertData
+      author: admin
+      changes:
+        - sql:
+            comment: Insert data into authority
+            sql: |
+              insert into authorities (authority)
+              values('FULL'), ('READ_ONLY');
+  - changeSet:
+      id: 0
+      author: admin
+      changes:
+        - sql:
+            comment: Insert data into roles
+            sql: |
+              insert into roles(role, authority_id)
+              values ('ADMIN', (select id from authorities where authority = 'FULL')),
+                ('GUEST', (select id from authorities where authority = 'READ_ONLY'));

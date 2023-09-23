@@ -14,7 +14,7 @@ databaseChangeLog:
                   type: varchar(100)
               - column:
                   name: unique_code
-                  type: int
+                  type: varchar(6)
                   constraints:
                     primaryKey: true
                     nullable: false
