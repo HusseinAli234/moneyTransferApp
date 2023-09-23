@@ -17,6 +17,8 @@ public class Company {
     @Column(name = "unique_code")
     private String uniqueCode;
     private String companyName;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "company", cascade = CascadeType.ALL)
+    List<Account> accounts;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "company", cascade = CascadeType.ALL)
     List<Transaction> transactions;

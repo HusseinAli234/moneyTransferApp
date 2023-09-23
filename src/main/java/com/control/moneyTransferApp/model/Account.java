@@ -17,11 +17,11 @@ public class Account {
     @Column(name = "balance")
     private Long accountNumber;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "company_code", referencedColumnName = "unique_code")
     private Company company;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_code", referencedColumnName = "unique_code")
     private User user;
 

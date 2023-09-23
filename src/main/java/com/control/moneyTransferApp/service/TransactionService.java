@@ -17,11 +17,11 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final UserRepository userRepository;
     public boolean createTransaction(String recipient, String sender, int sum) {
-            Long balanceSend =  userRepository.findByUniqueCode(sender).getBalance();
-            userRepository.findByUniqueCode(sender).setBalance(balanceSend - ((long)sum));
-            Long balanceRecip = userRepository.findByUniqueCode(recipient).getBalance();
-            userRepository.findByUniqueCode(recipient).setBalance(balanceRecip + ((long)sum));
-            transactionRepository.save(Transaction.builder().createdDate(LocalDate.now()).sender(userRepository.findByUniqueCode(sender)).recipient(userRepository.findByUniqueCode(recipient)).sum((long)sum).build());
+            Long balanceSend =  userRepository.findFirstByUniqueCode(sender).getBalance();
+            userRepository.findFirstByUniqueCode(sender).setBalance(balanceSend - ((long)sum));
+            Long balanceRecip = userRepository.findFirstByUniqueCode(recipient).getBalance();
+            userRepository.findFirstByUniqueCode(recipient).setBalance(balanceRecip + ((long)sum));
+            transactionRepository.save(Transaction.builder().createdDate(LocalDate.now()).sender(userRepository.findFirstByUniqueCode(sender)).recipient(userRepository.findFirstByUniqueCode(recipient)).sum((long)sum).build());
             return true;
 
 
@@ -29,6 +29,6 @@ public class TransactionService {
 
     public List<Transaction> getTransactionByCode(String code)
     {
-       return transactionRepository.findByRecipientOrSender(userRepository.findByUniqueCode(code),userRepository.findByUniqueCode(code));
+       return transactionRepository.findByRecipientOrSender(userRepository.findFirstByUniqueCode(code),userRepository.findFirstByUniqueCode(code));
     }
 }

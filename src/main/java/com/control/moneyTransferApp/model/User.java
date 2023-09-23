@@ -30,8 +30,9 @@ public class User implements UserDetails {
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
-    @OneToOne(mappedBy = "user")
-    private Company company;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
+    List<Account> accounts;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

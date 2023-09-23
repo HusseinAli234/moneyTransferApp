@@ -21,7 +21,7 @@ public class UserCredentialService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String code) throws UsernameNotFoundException {
-        User user = userRepository.findByUniqueCode(code);
+        User user = userRepository.findFirstByUniqueCode(code);
         if (user == null) {
             throw new UsernameNotFoundException("User not found with code: " + code);
         }

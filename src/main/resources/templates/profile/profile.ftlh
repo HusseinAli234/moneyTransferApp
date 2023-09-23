@@ -297,6 +297,25 @@
             buttonElement.classList.add("mt-2")
 
             buttonElement.textContent = 'Оплатить';
+            buttonElement.addEventListener("click",function ()
+            {
+                let params = new URLSearchParams({
+                    sum: inputElement.value,
+                    companyName: selectElement.value,
+                    userCode: readUser().username
+                })
+                const requestOption = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        [csrfHeader]: csrfToken,
+                    },
+                    body: params.toString(),
+                };
+                let response = fetch("/servicePayment",requestOption)
+                window.location.href = '/sign_profile';
+
+            })
 
 // Добавляем созданные элементы в иерархию
             selectElement.appendChild(option1);
