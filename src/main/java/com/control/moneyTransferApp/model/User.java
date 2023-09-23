@@ -17,6 +17,7 @@ import java.util.List;
 @Table(name = "users")
 public class User implements UserDetails {
     @Id
+    @Column(name = "unique_code")
     private String uniqueCode;
     private String name;
     private String password;
@@ -29,11 +30,15 @@ public class User implements UserDetails {
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
+    @OneToOne(mappedBy = "user")
+    private Company company;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
     }
+
+
 
     @Override
     public String getUsername() {

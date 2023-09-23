@@ -43,5 +43,10 @@ public class UserService {
       return   userRepository.findByUniqueCode(name);
     }
 
+    public User findByName(String name)
+    {
+        return userRepository.findByName(name);
+    }
+
 
 }

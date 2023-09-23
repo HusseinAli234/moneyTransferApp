@@ -24,7 +24,7 @@
                                         <p class="small text-muted mb-1">Количество транзакций</p>
                                         <p class="mb-0">0</p>
                                         <p class="small text-muted mb-1">Ваш баланс:</p>
-                                        <p class="mb-0">${user.balance}</p>
+                                        <p class="mb-0" id="balance"></p>
                                     </div>
 
                                 </div>
@@ -45,101 +45,38 @@
             <div class="col-12 mb-3 mb-lg-5">
                 <div class="position-relative card table-nowrap table-card">
                     <div class="card-header align-items-center">
-                        <h5 class="mb-0">Latest Transactions</h5>
-                        <p class="mb-0 small text-muted">1 Pending</p>
+                        <h5 class="mb-0">Transactions Journal</h5>
                     </div>
                     <div class="table-responsive">
                         <table class="table mb-0">
                             <thead class="small text-uppercase bg-body text-muted">
                             <tr>
-                                <th>Transaction ID</th>
+                                <th>Sender</th>
                                 <th>Date</th>
-                                <th>Name</th>
+                                <th>Recipient</th>
                                 <th>Amount</th>
                                 <th>Status</th>
                             </tr>
                             </thead>
                             <tbody>
+                            <#list users.transactionList as transaction>
                             <tr class="align-middle">
                                 <td>
-                                    #57473829
+                                    ${transaction.sender.name}
                                 </td>
-                                <td>13 Sep, 2021</td>
-                                <td>Renee Sims</td>
+                                <td>${transaction.createdDate.dayOfMonth}-${transaction.createdDate.month}-${transaction.createdDate.year}</td>
+                                <td>${transaction.recipient.name}</td>
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <span><i class="fa fa-arrow-up" aria-hidden="true"></i></span>
-                                        <span>$145</span>
+                                        <span>${transaction.sum}</span>
                                     </div>
                                 </td>
                                 <td>
                                     <span class="badge fs-6 fw-normal bg-tint-success text-success">Completed</span>
                                 </td>
                             </tr>
-                            <tr class="align-middle">
-                                <td>
-                                    #012458780
-                                </td>
-                                <td>19 Aug, 2021</td>
-                                <td>Edith Koenig</td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <span><i class="fa fa-arrow-down" aria-hidden="true"></i></span>
-                                        <span>$641.64</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span class="badge fs-6 fw-normal bg-tint-warning text-warning">Pending</span>
-                                </td>
-                            </tr>
-                            <tr class="align-middle">
-                                <td>
-                                    #76444326
-                                </td>
-                                <td>03 April, 2021</td>
-                                <td>Carrie Blount</td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <span><i class="fa fa-arrow-down" aria-hidden="true"></i></span>
-                                        <span>$12,457</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span class="badge fs-6 fw-normal bg-tint-success text-success">Completed</span>
-                                </td>
-                            </tr>
-                            <tr class="align-middle">
-                                <td>
-                                    #12498745
-                                </td>
-                                <td>15 March, 2021</td>
-                                <td>Ander Durham</td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <span><i class="fa fa-arrow-down" aria-hidden="true"></i></span>
-                                        <span>$785</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span class="badge fs-6 fw-normal bg-tint-success text-success">Completed</span>
-                                </td>
-                            </tr>
-                            <tr class="align-middle">
-                                <td>
-                                    #87444654
-                                </td>
-                                <td>23 Jan, 2021</td>
-                                <td>Netflix Inc.</td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <span><i class="fa fa-arrow-up" aria-hidden="true"></i></span>
-                                        <span>$199</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span class="badge fs-6 fw-normal bg-tint-success text-success">Completed</span>
-                                </td>
-                            </tr>
+                            </#list>
                             </tbody>
                         </table>
                     </div>
@@ -172,6 +109,18 @@
         {
             createPaymentForm()
         })
+        document.getElementById("payment").addEventListener("click",function ()
+        {
+            createService()
+        })
+
+        setInterval(function ()
+        {
+            let params = new URLSearchParams({
+                id: readUser().username
+            })
+            let response = fetch("/getUserById?" + params.toString()).then(response => response.json()).then(json => changeBalance(json))
+        },10000)
 
         function createPaymentForm()
         {
@@ -203,31 +152,6 @@
 
 // Создаем элемент form
             const form = document.createElement('form');
-
-// Создаем элемент для ввода номера карты
-            const cardNumberInput = document.createElement('input');
-            cardNumberInput.setAttribute('type', 'text');
-            cardNumberInput.id = 'typeText';
-            cardNumberInput.classList.add('form-control', 'form-control-lg');
-            cardNumberInput.setAttribute('size', '17');
-            cardNumberInput.placeholder = '1234 5678 9012 3457';
-            cardNumberInput.setAttribute('minlength', '19');
-            cardNumberInput.setAttribute('maxlength', '19');
-
-// Создаем метку для ввода номера карты
-            const cardNumberLabel = document.createElement('label');
-            cardNumberLabel.classList.add('form-label');
-            cardNumberLabel.setAttribute('for', 'typeText');
-            cardNumberLabel.textContent = 'Номер пользователя';
-
-// Создаем изображение для Visa
-
-
-// Добавляем номер карты и метку в div с классом form-outline
-            const cardNumberDiv = document.createElement('div');
-            cardNumberDiv.classList.add('form-outline');
-            cardNumberDiv.appendChild(cardNumberInput);
-            cardNumberDiv.appendChild(cardNumberLabel);
 
 // Создаем элемент для ввода имени владельца карты
             const cardHolderInput = document.createElement('input');
@@ -304,7 +228,6 @@
             button.appendChild(icon);
 
 // Добавляем все созданные элементы в DOM
-            form.appendChild(cardNumberDiv);
             form.appendChild(cardHolderDiv);
             form.appendChild(expirationInput);
             form.appendChild(button);
@@ -318,6 +241,78 @@
 // Добавляем созданный section в body
             document.getElementById("modalBody").appendChild(section);
 
+
+        }
+
+        function changeBalance(user)
+        {
+            console.log(user)
+            document.getElementById("balance").innerText = user.balance
+        }
+
+        function createService()
+        {
+            document.getElementById("modalBody").innerHTML = ""
+            // Находим элемент, к которому хотим добавить форму (замените 'elementId' на реальный идентификатор элемента)
+            var targetElement = document.getElementById("modalBody");
+
+// Создаем новый элемент формы
+            var formElement = document.createElement('form');
+            formElement.className = 'mb-5';
+
+// Создаем дочерние элементы формы
+            var divFormGroup = document.createElement('div');
+            divFormGroup.className = 'form-group';
+
+            var labelElement = document.createElement('label');
+            labelElement.setAttribute('for', 'rating');
+            labelElement.textContent = 'Услуги';
+
+            var selectElement = document.createElement('select');
+            selectElement.className = 'form-control';
+            selectElement.id = 'type';
+            selectElement.name = 'type';
+
+            var option1 = document.createElement('option');
+            option1.textContent = 'Megacom';
+
+            var option2 = document.createElement('option');
+            option2.textContent = 'O';
+
+            var option3 = document.createElement('option');
+            option3.textContent = 'Aknet';
+
+            var option4 = document.createElement('option');
+            option4.textContent = 'Jet';
+
+            var inputElement = document.createElement('input');
+            inputElement.type = 'number';
+            inputElement.name = 'sum';
+            inputElement.className = 'form-control';
+            inputElement.placeholder = 'Сумма';
+
+            var buttonElement = document.createElement('button');
+            buttonElement.type = 'submit';
+            buttonElement.className = 'btn btn-success';
+            buttonElement.classList.add("mt-2")
+
+            buttonElement.textContent = 'Оплатить';
+
+// Добавляем созданные элементы в иерархию
+            selectElement.appendChild(option1);
+            selectElement.appendChild(option2);
+            selectElement.appendChild(option3);
+            selectElement.appendChild(option4);
+
+            divFormGroup.appendChild(labelElement);
+            divFormGroup.appendChild(selectElement);
+
+            formElement.appendChild(divFormGroup);
+            formElement.appendChild(inputElement);
+            formElement.appendChild(buttonElement);
+
+// Добавляем форму к целевому элементу
+            targetElement.appendChild(formElement);
 
         }
 

@@ -20,16 +20,5 @@ public class UserControllerMVC {
         return "main";
     }
 
-    @PostMapping("/transaction")
-    public String makeTransaction(@RequestParam("recipient") String recipient,@RequestParam(name = "sender") String sender,@RequestParam(name = "sum") int sum)
-    {
-        if(transactionService.createTransaction(recipient,sender,sum))
-        {
-            return "redirect:/sign_profile";
-        }
-        else
-        {
-            return "redirect:/";
-        }
-    }
+
 }

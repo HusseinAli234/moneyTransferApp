@@ -1,6 +1,9 @@
 package com.control.moneyTransferApp.controller;
 
 import com.control.moneyTransferApp.dto.UserDto;
+import com.control.moneyTransferApp.dto.UserTransactionDto;
+import com.control.moneyTransferApp.model.Transaction;
+import com.control.moneyTransferApp.service.TransactionService;
 import com.control.moneyTransferApp.service.UserService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Slf4j
 public class AuthControllerMVC {
     private final UserService userService;
+    private final TransactionService transactionService;
 
     @GetMapping("/sign_in")
     public String login()
@@ -27,7 +31,8 @@ public class AuthControllerMVC {
     @GetMapping("/sign_profile")
     public String signProfile(Model model, Authentication auth)
     {
-        model.addAttribute("user",userService.findUserByName(auth.getName()));
+        UserTransactionDto userTransactionDto = UserTransactionDto.builder().user(userService.findByName(auth.getName())).transactionList(transactionService.getTransactionByCode(userService.findByName(auth.getName()).getUniqueCode())).build();
+        model.addAttribute("users",userTransactionDto);
         return "profile/profile";
     }
     @GetMapping("/sign_up")

@@ -15,6 +15,7 @@ import java.time.LocalDate;
 @Table(name = "transactions")
 public class Transaction {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
     @JoinColumn(name = "recipient")
@@ -24,6 +25,9 @@ public class Transaction {
     private User sender;
     private Long sum;
     private LocalDate createdDate;
+    @ManyToOne
+    @JoinColumn(name = "company_code")
+    private Company company;
 
 
 }

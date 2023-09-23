@@ -15,21 +15,28 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: recipient
-                  type: int
+                  type: varchar(6)
                   constraints:
                     foreignKeyName: fk_recipient_number
                     references: users(unique_code)
+                    nullable: true
               - column:
                   name: sender
-                  type: int
+                  type: varchar(6)
                   constraints:
                     foreignKeyName: fk_sender_number
                     references: users(unique_code)
+                    nullable: true
               - column:
                   name: sum
                   type: long
               - column:
                   name: created_date
                   type: DATE
-
-
+              - column:
+                  name: company_code
+                  type: varchar(6)
+                  constraints:
+                    foreignKeyName: fk_company_code
+                    references: services(unique_code)
+                    nullable: true
